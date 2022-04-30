@@ -1,6 +1,6 @@
 import cv2
 import time
-
+import datetime
 HAAR_FILE = "haarcascade_frontalface_default.xml"
 cascade = cv2.CascadeClassifier(HAAR_FILE)
 
@@ -18,7 +18,12 @@ while(True):
     for x, y, w, h in face:
         cv2.rectangle(frame,(x,y),(x+w,y+h),(0,0,255),1)
     rects = cascade.detectMultiScale(frame, scaleFactor=1.2, minNeighbors=2, minSize=(1, 1))
-    print('[cnn] 検出された人数\n: {}'.format(len(rects)))
+    print('検出された人数\n: {}'.format(len(rects)))
+    if len(rects) >=1:
+        date = datetime.now().strftime("%Y%m%d_%H%M%S")
+        path = f"{date}.jpg"
+        cv2.imwrite(path, frame)
+
     cv2.imshow('frame',frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):#qで終了
         break

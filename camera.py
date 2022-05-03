@@ -10,7 +10,7 @@ cap.set(cv2.CAP_PROP_FPS, FPS)
 print(cap.get(cv2.CAP_PROP_FPS))
 
 
-while(True):
+while True:
     ret, frame = cap.read()
 
     face = cascade.detectMultiScale(frame)

@@ -4,7 +4,8 @@ from PIL import Image, ImageFont, ImageDraw
 from concurrent.futures import ThreadPoolExecutor
 import glob
 
-resize = 4
+from numpy import size
+
 ok = False
 
 PATHS = [
@@ -22,11 +23,12 @@ cap = cv2.VideoCapture(PATHS[0])
 # 動画のプロパティを取得
 width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-fps = cap.get(cv2.CAP_PROP_FPS)
-
+#fps = cap.get(cv2.CAP_PROP_FPS)
+fps = 10
+saizu = (720,480)
 # 書き出し設定
 fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
-writer = cv2.VideoWriter(PATHS[1],fourcc, fps, (int(width/resize), int(height/resize)))
+writer = cv2.VideoWriter(PATHS[1],fourcc, fps, saizu)
 
 cascade = cv2.CascadeClassifier(XML_PATH)
 img1 = cv2.imread(PATHS[2])
@@ -38,56 +40,47 @@ while True:
     ret, frame = cap.read()
     if not ret:
         break
-    frame = cv2.resize(frame,(int(width/resize), int(height/resize)))
+    frame = cv2.resize(frame,saizu)
     writer.write(frame)
 
 writer.release()
 cap.release()
 
 
-cap = cv2.VideoCapture(PATHS[2])  # ビデオ読み込み
-
-if not cap.isOpened():  
-    print(f"{PATHS[2]} が正常に読み込めませんでした。")
+cap20 = cv2.VideoCapture(PATHS[1])  # ビデオ読み込み
+print(cap20)
+if not cap20.isOpened():  
+    print(f"{PATHS[1]} が正常に読み込めませんでした。")
     exit()
 
-se = 0
-
-def makevido():
-    img_array = []
-    for filename in sorted(glob.glob("Analysis_result_hog/*.jpg")):
-        img = cv2.imread(filename)
-        height, width, layers = img.shape
-        size = (width, height)
-        img_array.append(img)
-
-    name = 'Face recognition.mp4'
-    out = cv2.VideoWriter(name, cv2.VideoWriter_fourcc(*'MP4'), 5.0, size)
-
-    for i in range(len(img_array)):
-        out.write(img_array[i])
-    out.release
-    global ok
-    ok = True
-
-while cap.isOpened():
+se,noe = 0,0
+global img_array
+img_array = []
+while (cap20.isOpened()):
     se = se+1
-    ret, frame = cap.read()
-    if ret == True:
-
-        face = cascade.detectMultiScale(frame)
-        for x, y, w, h in face:
-            cv2.rectangle(frame,(x,y),(x+w,y+h),(0,0,255),1)
-        rects = cascade.detectMultiScale(frame, scaleFactor=1.2, minNeighbors=2, minSize=(1, 1))
-        print('検出された人数: {}'.format(len(rects)))
-        ho = len(rects)
-        if ho > 0:
-            cascade = cv2.CascadeClassifier(XML_PATH)
-            img1 = cv2.imread(PATHS[2])
-            rects1 = cascade.detectMultiScale(img1, scaleFactor=1.2, minNeighbors=2, minSize=(1, 1))
-            print('[hog] 検出された対象人物人数: {}'.format(len(rects1)))
-            print(f"[hog] {ho}")
-            y = len(rects1)
+    ret1, frame = cap20.read()
+    print(ret1)
+    if ret1 == False:break
+    face = cascade.detectMultiScale(frame)
+    for x, y, w, h in face:
+        cv2.rectangle(frame,(x,y),(x+w,y+h),(0,0,255),1)
+    rects = cascade.detectMultiScale(frame, scaleFactor=1.2, minNeighbors=2, minSize=(1, 1))
+    print('検出された人数: {}'.format(len(rects)))
+    ho = len(rects)
+    if ho ==0:
+        cv2.imwrite(f"Analysis_result_hog/none/Analysis_result{i}{a}{se}{noe}.jpg",frame)
+        img = cv2.imread(f"Analysis_result_hog/none/Analysis_result{i}{a}{se}{noe}.jpg")
+        noe = noe+1
+        img_array.append(img)
+    if ho > 0:
+        cascade = cv2.CascadeClassifier(XML_PATH)
+        img1 = cv2.imread(PATHS[2])
+        rects1 = cascade.detectMultiScale(img1, scaleFactor=1.2, minNeighbors=2, minSize=(1, 1))
+        y = len(rects1)
+        if y == 0:
+            print("[hog] 対象人物が検出されませんでした")
+            break
+        if y >0:
             print(f"[hog] {y}")
             for i in range(ho):
                 print(f"[hog] {i}")
@@ -166,18 +159,35 @@ while cap.isOpened():
                         back_im = im1.copy()
                         back_im.paste(im2, (590, 530))
                         back_im.save(completion, quality=95)
+
+                        img = cv2.imread(f'Analysis_result_hog/Analysis_result{i}{a}{se}.jpg')
+                        img_array.append(img)
                 except Exception as e:
+                    try:
+                        cv2.imwrite(f"Analysis_result_hog/none/Analysis_result{i}{a}{se}{noe}.jpg",frame)
+                        img = cv2.imread(f"Analysis_result_hog/none/Analysis_result{i}{a}{se}{noe}.jpg")
+                        img_array.append(img)
+                        noe = noe+1
+                    except:
+                        print("[hog] error" + str(e))
                     print("[hog] error" + str(e))
     
+
+name = 'Face recognition.mp4'
+fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
+video = cv2.VideoWriter(name,fourcc,10,(1280,720))
+
+for i in range(len(img_array)):
+    video.write(img_array[i])
+video.release
+ok = True
 
 cap10 = cv2.VideoCapture('Face recognition.mp4')
 
 
-makevido()
-
 while ok:
 
-    ret11, frame10 = cap.read()
+    ret11, frame10 = cap10.read()
     if ret11 == True:
 
         cv2.imshow("Video", frame10)
@@ -188,6 +198,6 @@ while ok:
     else:
         break
 
-cap.release()
+cap10.release()
 
 cv2.destroyAllWindows()

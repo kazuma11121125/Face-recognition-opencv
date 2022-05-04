@@ -4,8 +4,6 @@ from PIL import Image, ImageFont, ImageDraw
 from concurrent.futures import ThreadPoolExecutor
 import glob
 
-from numpy import size
-
 ok = False
 
 PATHS = [

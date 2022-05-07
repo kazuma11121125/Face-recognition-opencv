@@ -1,5 +1,6 @@
 import cv2
 from moviepy.editor import *
+from moviepy.video.fx.resize import resize
 import threading
 PATHS = [
     "vtest.mp4",#ビデオデータ
@@ -17,14 +18,15 @@ DURATION = video_len_sec / 4
 
 print(DURATION)
 
-file_path = PATHS[1]
+file_path = PATHS[0]
 
 def one():
     start = 0    # 切り出し開始時刻。秒で表現
     end = DURATION    # 切り出し終了時刻。同じく秒で表現
     save_path = "cat_vtest_1.mp4"    # 編集後のファイル保存先のパス
     video = VideoFileClip(file_path).subclip(start, end)    # ビデオのカット開始
-    video.write_videofile(save_path,fps=10) 
+    video.write_videofile(save_path,fps=10)
+
 
 def two():
     start = DURATION    # 切り出し開始時刻。秒で表現

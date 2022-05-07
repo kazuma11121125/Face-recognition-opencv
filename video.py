@@ -1,3 +1,5 @@
+from time import time
+from xml.etree.ElementTree import XML
 import cv2
 import face_recognition
 from PIL import Image, ImageFont, ImageDraw
@@ -11,40 +13,15 @@ PATHS = [
     "image/elon_test.jpg"  # 対象人物指定画像
 
 ]
+global XML_PATH
 XML_PATH = "haarcascade_frontalface_default.xml"
 
-
-# VideoCapture オブジェクトを取得
-cap = cv2.VideoCapture(PATHS[0])
-
-# 動画のプロパティを取得
-width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-#fps = cap.get(cv2.CAP_PROP_FPS)
-fps = 10
-saizu = (720,480)
-# 書き出し設定
-fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
-writer = cv2.VideoWriter(PATHS[1],fourcc, fps, saizu)
-global cascade
 cascade = cv2.CascadeClassifier(XML_PATH)
 img1 = cv2.imread(PATHS[2])
 rects1 = cascade.detectMultiScale(img1, scaleFactor=1.2, minNeighbors=2, minSize=(1, 1))
 print('[hog] 検出された対象人物人数: {}'.format(len(rects1)))
 
-# 画質変換
-while True:
-    ret, frame = cap.read()
-    if not ret:
-        break
-    frame = cv2.resize(frame,saizu)
-    writer.write(frame)
-
-writer.release()
-cap.release()
-
-
-cap9 = cv2.VideoCapture(PATHS[1])                  # 動画を読み込む
+cap9 = cv2.VideoCapture(PATHS[0])                  # 動画を読み込む
 video_frame_count = cap9.get(cv2.CAP_PROP_FRAME_COUNT) # フレーム数を取得する
 video_fps = cap9.get(cv2.CAP_PROP_FPS)                 # フレームレートを取得する
 video_len_sec = video_frame_count / video_fps         # 長さ（秒）を計算する
@@ -54,66 +31,133 @@ DURATION = video_len_sec / 4
 
 print(DURATION)
 
-file_path = PATHS[1]
+file_path = PATHS[0]
 
 def one():
     start = 0    # 切り出し開始時刻。秒で表現
     end = DURATION    # 切り出し終了時刻。同じく秒で表現
-    save_path = "cat_vtest_1.mp4"    # 編集後のファイル保存先のパス
+    save_path = "movie_set/cat_vtest_1.mp4"    # 編集後のファイル保存先のパス
     video = VideoFileClip(file_path).subclip(start, end)    # ビデオのカット開始
-    video.write_videofile(save_path,fps=10) 
+    video.write_videofile(save_path,fps=10)
+    cap = cv2.VideoCapture(save_path)
+    # 動画のプロパティを取得
+    fps = 10
+    saizu = (720,480)
+    # 書き出し設定
+    fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
+    writer = cv2.VideoWriter("movie_set/cat_vtest_1_set.mp4",fourcc, fps, saizu)
+    # 画質変換
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+        frame = cv2.resize(frame,saizu)
+        writer.write(frame)
+
+    writer.release()
+    cap.release()
 
 def two():
     start = DURATION    # 切り出し開始時刻。秒で表現
     end = DURATION*2    # 切り出し終了時刻。同じく秒で表現
-    save_path = "cat_vtest_2.mp4"    # 編集後のファイル保存先のパス
+    save_path = "movie_set/cat_vtest_2.mp4"    # 編集後のファイル保存先のパス
     video = VideoFileClip(file_path).subclip(start, end)    # ビデオのカット開始
     video.write_videofile(save_path,fps=10)
+    cap = cv2.VideoCapture(save_path)
+    # 動画のプロパティを取得
+    fps = 10
+    saizu = (720,480)
+    # 書き出し設定
+    fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
+    writer = cv2.VideoWriter("movie_set/cat_vtest_2_set.mp4",fourcc, fps, saizu)
+    # 画質変換
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+        frame = cv2.resize(frame,saizu)
+        writer.write(frame)
+
+    writer.release()
+    cap.release()
 
 def three():
     start = DURATION*2    # 切り出し開始時刻。秒で表現
     end = DURATION*3    # 切り出し終了時刻。同じく秒で表現
-    save_path = "cat_vtest_3.mp4"    # 編集後のファイル保存先のパス
+    save_path = "movie_set/cat_vtest_3.mp4"    # 編集後のファイル保存先のパス
     video = VideoFileClip(file_path).subclip(start, end)    # ビデオのカット開始
     video.write_videofile(save_path,fps=10)
+    cap = cv2.VideoCapture(save_path)
+    # 動画のプロパティを取得
+    fps = 10
+    saizu = (720,480)
+    # 書き出し設定
+    fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
+    writer = cv2.VideoWriter("movie_set/cat_vtest_3_set.mp4",fourcc, fps, saizu)
+    # 画質変換
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+        frame = cv2.resize(frame,saizu)
+        writer.write(frame)
 
+    writer.release()
+    cap.release()
 def four():
     start = DURATION*3    # 切り出し開始時刻。秒で表現
     end = DURATION*4    # 切り出し終了時刻。同じく秒で表現
-    save_path = "cat_vtest_4.mp4"    # 編集後のファイル保存先のパス
+    save_path = "movie_set/cat_vtest_4.mp4"    # 編集後のファイル保存先のパス
     video = VideoFileClip(file_path).subclip(start, end)    # ビデオのカット開始
     video.write_videofile(save_path,fps=10)
+    cap = cv2.VideoCapture(save_path)
+    # 動画のプロパティを取得
+    fps = 10
+    saizu = (720,480)
+    # 書き出し設定
+    fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
+    writer = cv2.VideoWriter("movie_set/cat_vtest_4_set.mp4",fourcc, fps, saizu)
+    # 画質変換
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+        frame = cv2.resize(frame,saizu)
+        writer.write(frame)
+
+    writer.release()
+    cap.release()
 
 t1 = threading.Thread(target=one)
 t2 = threading.Thread(target=two)
 t3 = threading.Thread(target=three)
 t4 = threading.Thread(target=four)
 
-t1.start()
-t2.start()
-t3.start()
-t4.start()
-t1.join()
-t2.join()
-t3.join()
-t4.join()
+#t1.start()
+#t2.start()
+#t3.start()
+#t4.start()
+#t1.join()
+#t2.join()
+#t3.join()
+#t4.join()
 
-cap1 = cv2.VideoCapture("cat_vtest_1.mp4")  # ビデオ読み込み
+cap1 = cv2.VideoCapture("movie_set/cat_vtest_1_set.mp4")  # ビデオ読み込み
 if not cap1.isOpened():  
     print("1 正常に読み込めませんでした。")
     exit()
 
-cap2 = cv2.VideoCapture("cat_vtest_2.mp4")  # ビデオ読み込み
+cap2 = cv2.VideoCapture("movie_set/cat_vtest_2_set.mp4")  # ビデオ読み込み
 if not cap2.isOpened():  
     print("2 正常に読み込めませんでした。")
     exit()
 
-cap3 = cv2.VideoCapture("cat_vtest_3.mp4")  # ビデオ読み込み
+cap3 = cv2.VideoCapture("movie_set/cat_vtest_3_set.mp4")  # ビデオ読み込み
 if not cap3.isOpened():  
     print("3 正常に読み込めませんでした。")
     exit()
 
-cap4 = cv2.VideoCapture("cat_vtest_4.mp4")  # ビデオ読み込み
+cap4 = cv2.VideoCapture("movie_set/cat_vtest_4_set.mp4")  # ビデオ読み込み
 if not cap4.isOpened():  
     print("4 正常に読み込めませんでした。")
     exit()
@@ -128,20 +172,21 @@ img_array_4 = []
 
 def one_set():
     se,noe = 0,0
+    cascade = cv2.CascadeClassifier(XML_PATH)
+
     while (cap1.isOpened()):
         se = se+1
         ret1, frame = cap1.read()
-        print(ret1)
         if ret1 == False:break
         face = cascade.detectMultiScale(frame)
         for x, y, w, h in face:
             cv2.rectangle(frame,(x,y),(x+w,y+h),(0,0,255),1)
         rects = cascade.detectMultiScale(frame, scaleFactor=1.2, minNeighbors=2, minSize=(1, 1))
-        print('検出された人数: {}'.format(len(rects)))
+        print('[hog:1]検出された人数: {}'.format(len(rects)))
         ho = len(rects)
         if ho ==0:
-            cv2.imwrite(f"Analysis_result_hog/none/Analysis_result{i}{a}{se}{noe}_1.jpg",frame)
-            img = cv2.imread(f"Analysis_result_hog/none/Analysis_result{i}{a}{se}{noe}_1.jpg")
+            cv2.imwrite(f"Analysis_result_hog/none/Analysis_result{se}{noe}_1.jpg",frame)
+            img = cv2.imread(f"Analysis_result_hog/none/Analysis_result{se}{noe}_1.jpg")
             noe = noe+1
             img_array_1.append(img)
         if ho > 0:
@@ -150,15 +195,15 @@ def one_set():
             rects1 = cascade.detectMultiScale(img1, scaleFactor=1.2, minNeighbors=2, minSize=(1, 1))
             y = len(rects1)
             if y == 0:
-                print("[hog] 対象人物が検出されませんでした")
+                print("[hog:1] 対象人物が検出されませんでした")
                 break
             if y >0:
-                print(f"[hog] 対象人物 {y}人")
+                print(f"[hog:1] 対象人物 {y}人")
                 for i in range(ho):
-                    print(f"[hog] 検出された {i+1}人目")
+                    print(f"[hog:1] 検出された {i+1}人目")
                     try:
                         for a in range(y):
-                            print(f"[hog] 対象人物 {y}人目")
+                            print(f"[hog:1] 対象人物 {y}人目")
                             # step1 画像読み込みとコンバート
                             img_elon = frame
                             img_test = face_recognition.load_image_file(PATHS[2])
@@ -178,10 +223,10 @@ def one_set():
                             results = face_recognition.compare_faces([encode_elon], encode_elon_test)
                             # 値が小さい程マッチしている
                             face_dis = face_recognition.face_distance([encode_elon], encode_elon_test)
-                            print(f"[hog] {results, face_dis}")
+                            print(f"[hog:1] {results, face_dis}")
                             p = 1 - face_dis[0]
                             probability = p*100
-                            print(f"[hog] {probability}%")
+                            print(f"[hog:1] {probability}%")
                             if results == [False]:
                                 res = "No match."
                             elif results == [True]:
@@ -190,7 +235,7 @@ def one_set():
                                 elif probability > 60:
                                     res = "Match found."
                             text = f"{res}:{probability}%"
-                            print(text)
+                            print(f"[hog:1]{text}")
                             resu = f'result_hog/{i}{a}{se}_1.jpg'
                             resu1 = f'result_hog/{i}{a}{se}_tm_1.jpg'
                             cv2.imwrite(resu, img_elon)
@@ -242,25 +287,25 @@ def one_set():
                             img_array_1.append(img)
                             noe = noe+1
                         except:
-                            print("[hog] error" + str(e))
-                        print("[hog] error" + str(e))
+                            print("[hog:1] error" + str(e))
+                        print("[hog:1] error" + str(e))
 
 def two_set():
+    cascade = cv2.CascadeClassifier(XML_PATH)
     se,noe = 0,0
     while (cap2.isOpened()):
         se = se+1
         ret1, frame = cap2.read()
-        print(ret1)
         if ret1 == False:break
         face = cascade.detectMultiScale(frame)
         for x, y, w, h in face:
             cv2.rectangle(frame,(x,y),(x+w,y+h),(0,0,255),1)
         rects = cascade.detectMultiScale(frame, scaleFactor=1.2, minNeighbors=2, minSize=(1, 1))
-        print('検出された人数: {}'.format(len(rects)))
+        print('[hog:2]検出された人数: {}'.format(len(rects)))
         ho = len(rects)
         if ho ==0:
-            cv2.imwrite(f"Analysis_result_hog/none/Analysis_result{i}{a}{se}{noe}_2.jpg",frame)
-            img = cv2.imread(f"Analysis_result_hog/none/Analysis_result{i}{a}{se}{noe}_2.jpg")
+            cv2.imwrite(f"Analysis_result_hog/none/Analysis_result{se}{noe}_2.jpg",frame)
+            img = cv2.imread(f"Analysis_result_hog/none/Analysis_result{se}{noe}_2.jpg")
             noe = noe+1
             img_array_2.append(img)
         if ho > 0:
@@ -269,15 +314,15 @@ def two_set():
             rects1 = cascade.detectMultiScale(img1, scaleFactor=1.2, minNeighbors=2, minSize=(1, 1))
             y = len(rects1)
             if y == 0:
-                print("[hog] 対象人物が検出されませんでした")
+                print("[hog:2] 対象人物が検出されませんでした")
                 break
             if y >0:
-                print(f"[hog] 対象人物 {y}人")
+                print(f"[hog:2] 対象人物 {y}人")
                 for i in range(ho):
-                    print(f"[hog] 検出された {i+1}人目")
+                    print(f"[hog:2] 検出された {i+1}人目")
                     try:
                         for a in range(y):
-                            print(f"[hog] 対象人物 {y}人目")
+                            print(f"[hog:2] 対象人物 {y}人目")
                             # step1 画像読み込みとコンバート
                             img_elon = frame
                             img_test = face_recognition.load_image_file(PATHS[2])
@@ -297,10 +342,10 @@ def two_set():
                             results = face_recognition.compare_faces([encode_elon], encode_elon_test)
                             # 値が小さい程マッチしている
                             face_dis = face_recognition.face_distance([encode_elon], encode_elon_test)
-                            print(f"[hog] {results, face_dis}")
+                            print(f"[hog:2] {results, face_dis}")
                             p = 1 - face_dis[0]
                             probability = p*100
-                            print(f"[hog] {probability}%")
+                            print(f"[hog:2] {probability}%")
                             if results == [False]:
                                 res = "No match."
                             elif results == [True]:
@@ -309,7 +354,7 @@ def two_set():
                                 elif probability > 60:
                                     res = "Match found."
                             text = f"{res}:{probability}%"
-                            print(text)
+                            print(f"[hog:2]{text}")
                             resu = f'result_hog/{i}{a}{se}_2.jpg'
                             resu1 = f'result_hog/{i}{a}{se}_tm_2.jpg'
                             cv2.imwrite(resu, img_elon)
@@ -365,21 +410,21 @@ def two_set():
                         print("[hog] error" + str(e))
     
 def three_set():
+    cascade = cv2.CascadeClassifier(XML_PATH)
     se,noe = 0,0
     while (cap3.isOpened()):
         se = se+1
         ret1, frame = cap3.read()
-        print(ret1)
         if ret1 == False:break
         face = cascade.detectMultiScale(frame)
         for x, y, w, h in face:
             cv2.rectangle(frame,(x,y),(x+w,y+h),(0,0,255),1)
         rects = cascade.detectMultiScale(frame, scaleFactor=1.2, minNeighbors=2, minSize=(1, 1))
-        print('検出された人数: {}'.format(len(rects)))
+        print('[hog:3]検出された人数: {}'.format(len(rects)))
         ho = len(rects)
         if ho ==0:
-            cv2.imwrite(f"Analysis_result_hog/none/Analysis_result{i}{a}{se}{noe}_3.jpg",frame)
-            img = cv2.imread(f"Analysis_result_hog/none/Analysis_result{i}{a}{se}{noe}_3.jpg")
+            cv2.imwrite(f"Analysis_result_hog/none/Analysis_result{se}{noe}_3.jpg",frame)
+            img = cv2.imread(f"Analysis_result_hog/none/Analysis_result{se}{noe}_3.jpg")
             noe = noe+1
             img_array_3.append(img)
         if ho > 0:
@@ -388,15 +433,15 @@ def three_set():
             rects1 = cascade.detectMultiScale(img1, scaleFactor=1.2, minNeighbors=2, minSize=(1, 1))
             y = len(rects1)
             if y == 0:
-                print("[hog] 対象人物が検出されませんでした")
+                print("[hog:3] 対象人物が検出されませんでした")
                 break
             if y >0:
-                print(f"[hog] 対象人物 {y}人")
+                print(f"[hog:3] 対象人物 {y}人")
                 for i in range(ho):
-                    print(f"[hog] 検出された {i+1}人目")
+                    print(f"[hog:3] 検出された {i+1}人目")
                     try:
                         for a in range(y):
-                            print(f"[hog] 対象人物 {y}人目")
+                            print(f"[hog:3] 対象人物 {y}人目")
                             # step1 画像読み込みとコンバート
                             img_elon = frame
                             img_test = face_recognition.load_image_file(PATHS[2])
@@ -416,10 +461,10 @@ def three_set():
                             results = face_recognition.compare_faces([encode_elon], encode_elon_test)
                             # 値が小さい程マッチしている
                             face_dis = face_recognition.face_distance([encode_elon], encode_elon_test)
-                            print(f"[hog] {results, face_dis}")
+                            print(f"[hog:3] {results, face_dis}")
                             p = 1 - face_dis[0]
                             probability = p*100
-                            print(f"[hog] {probability}%")
+                            print(f"[hog:3] {probability}%")
                             if results == [False]:
                                 res = "No match."
                             elif results == [True]:
@@ -428,7 +473,7 @@ def three_set():
                                 elif probability > 60:
                                     res = "Match found."
                             text = f"{res}:{probability}%"
-                            print(text)
+                            print(f"[hog:3]{text}")
                             resu = f'result_hog/{i}{a}{se}_3.jpg'
                             resu1 = f'result_hog/{i}{a}{se}_tm_3.jpg'
                             cv2.imwrite(resu, img_elon)
@@ -480,26 +525,25 @@ def three_set():
                             img_array_3.append(img)
                             noe = noe+1
                         except:
-                            print("[hog] error" + str(e))
-                        print("[hog] error" + str(e))
+                            print("[hog:3] error" + str(e))
+                        print("[hog:3] error" + str(e))
 
 def foure_set():
     se,noe = 0,0
-
+    cascade = cv2.CascadeClassifier(XML_PATH)
     while (cap4.isOpened()):
         se = se+1
         ret1, frame = cap4.read()
-        print(ret1)
         if ret1 == False:break
         face = cascade.detectMultiScale(frame)
         for x, y, w, h in face:
             cv2.rectangle(frame,(x,y),(x+w,y+h),(0,0,255),1)
         rects = cascade.detectMultiScale(frame, scaleFactor=1.2, minNeighbors=2, minSize=(1, 1))
-        print('検出された人数: {}'.format(len(rects)))
+        print('[hog:4]検出された人数: {}'.format(len(rects)))
         ho = len(rects)
         if ho ==0:
-            cv2.imwrite(f"Analysis_result_hog/none/Analysis_result{i}{a}{se}{noe}_4.jpg",frame)
-            img = cv2.imread(f"Analysis_result_hog/none/Analysis_result{i}{a}{se}{noe}_4.jpg")
+            cv2.imwrite(f"Analysis_result_hog/none/Analysis_result{se}{noe}_4.jpg",frame)
+            img = cv2.imread(f"Analysis_result_hog/none/Analysis_result{se}{noe}_4.jpg")
             noe = noe+1
             img_array_4.append(img)
         if ho > 0:
@@ -508,15 +552,15 @@ def foure_set():
             rects1 = cascade.detectMultiScale(img1, scaleFactor=1.2, minNeighbors=2, minSize=(1, 1))
             y = len(rects1)
             if y == 0:
-                print("[hog] 対象人物が検出されませんでした")
+                print("[hog:4] 対象人物が検出されませんでした")
                 break
             if y >0:
-                print(f"[hog] 対象人物 {y}人")
+                print(f"[hog:4] 対象人物 {y}人")
                 for i in range(ho):
-                    print(f"[hog] 検出された {i+1}人目")
+                    print(f"[hog:4] 検出された {i+1}人目")
                     try:
                         for a in range(y):
-                            print(f"[hog] 対象人物 {y}人目")
+                            print(f"[hog:4] 対象人物 {y}人目")
                             # step1 画像読み込みとコンバート
                             img_elon = frame
                             img_test = face_recognition.load_image_file(PATHS[2])
@@ -536,10 +580,10 @@ def foure_set():
                             results = face_recognition.compare_faces([encode_elon], encode_elon_test)
                             # 値が小さい程マッチしている
                             face_dis = face_recognition.face_distance([encode_elon], encode_elon_test)
-                            print(f"[hog] {results, face_dis}")
+                            print(f"[hog:4] {results, face_dis}")
                             p = 1 - face_dis[0]
                             probability = p*100
-                            print(f"[hog] {probability}%")
+                            print(f"[hog:4] {probability}%")
                             if results == [False]:
                                 res = "No match."
                             elif results == [True]:
@@ -600,8 +644,8 @@ def foure_set():
                             img_array_4.append(img)
                             noe = noe+1
                         except:
-                            print("[hog] error" + str(e))
-                        print("[hog] error" + str(e))
+                            print("[hog:4] error" + str(e))
+                        print("[hog:4] error" + str(e))
 
 t1 = threading.Thread(target=one_set)
 t2 = threading.Thread(target=two_set)
@@ -610,12 +654,12 @@ t4 = threading.Thread(target=foure_set)
 
 t1.start()
 t2.start()
-t3.start()
-t4.start()
+#t3.start()
+#t4.start()
 t1.join()
 t2.join()
-t3.join()
-t4.join()
+#t3.join()
+#t4.join()
 
 img_array.extend(img_array_1)
 img_array.extend(img_array_2)

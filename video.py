@@ -119,8 +119,7 @@ if not cap4.isOpened():
     exit()
 
 
-se,noe = 0,0
-global img_array
+global img_array,img_array_1,img_array_2,img_array_3,img_array_4
 img_array = []
 img_array_1 = []
 img_array_2 = []
@@ -128,6 +127,7 @@ img_array_3 = []
 img_array_4 = []
 
 def one_set():
+    se,noe = 0,0
     while (cap1.isOpened()):
         se = se+1
         ret1, frame = cap1.read()
@@ -246,6 +246,7 @@ def one_set():
                         print("[hog] error" + str(e))
 
 def two_set():
+    se,noe = 0,0
     while (cap2.isOpened()):
         se = se+1
         ret1, frame = cap2.read()
@@ -364,6 +365,7 @@ def two_set():
                         print("[hog] error" + str(e))
     
 def three_set():
+    se,noe = 0,0
     while (cap3.isOpened()):
         se = se+1
         ret1, frame = cap3.read()
@@ -482,6 +484,8 @@ def three_set():
                         print("[hog] error" + str(e))
 
 def foure_set():
+    se,noe = 0,0
+
     while (cap4.isOpened()):
         se = se+1
         ret1, frame = cap4.read()

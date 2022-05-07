@@ -26,7 +26,7 @@ saizu = (720,480)
 # 書き出し設定
 fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
 writer = cv2.VideoWriter(PATHS[1],fourcc, fps, saizu)
-
+global cascade
 cascade = cv2.CascadeClassifier(XML_PATH)
 img1 = cv2.imread(PATHS[2])
 rects1 = cascade.detectMultiScale(img1, scaleFactor=1.2, minNeighbors=2, minSize=(1, 1))

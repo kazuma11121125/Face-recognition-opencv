@@ -1,5 +1,4 @@
 from time import time
-from xml.etree.ElementTree import XML
 import cv2
 import face_recognition
 from PIL import Image, ImageFont, ImageDraw

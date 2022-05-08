@@ -154,11 +154,6 @@ while (cap20.isOpened()):
                     except:
                         print("[hog] error" + str(e))
                     print("[hog] error" + str(e))
-    
-
-
-for i in range(len(img_array)):
-    video.write(img_array[i])
 
 video.release()
 

@@ -8,41 +8,18 @@ ok = False
 
 PATHS = [
     "vtest.mp4",#ビデオデータ
-    "movie_resied_cnn.mp4",  # 解像度変更したビデオデータ
+    "vtest.mp4",  # 解像度変更したビデオデータ
     "image/elon_test.jpg"  # 対象人物指定画像
 
 ]
 XML_PATH = "haarcascade_frontalface_default.xml"
 
 
-# VideoCapture オブジェクトを取得
-cap = cv2.VideoCapture(PATHS[0])
-
-# 動画のプロパティを取得
-width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-#fps = cap.get(cv2.CAP_PROP_FPS)
-fps = 10
-saizu = (720,480)
-# 書き出し設定
-fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
-writer = cv2.VideoWriter(PATHS[1],fourcc, fps, saizu)
 
 cascade = cv2.CascadeClassifier(XML_PATH)
 img1 = cv2.imread(PATHS[2])
 rects1 = cascade.detectMultiScale(img1, scaleFactor=1.2, minNeighbors=2, minSize=(1, 1))
 print('[hog] 検出された対象人物人数: {}'.format(len(rects1)))
-
-# 画質変換
-while True:
-    ret, frame = cap.read()
-    if not ret:
-        break
-    frame = cv2.resize(frame,saizu)
-    writer.write(frame)
-
-writer.release()
-cap.release()
 
 
 cap20 = cv2.VideoCapture(PATHS[1])  # ビデオ読み込み
@@ -55,9 +32,15 @@ frame_sec_all = cap20.get(cv2.CAP_PROP_FRAME_COUNT)
 se,noe,frame_sec = 0,0,0
 global img_array
 img_array = []
+
+# ビデオ出力先ファイルの指定
+name = 'Face recognition hog.mp4'
+fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
+video = cv2.VideoWriter(name,fourcc,10,(1000, 800))
+
 while (cap20.isOpened()):
     frame_sec = frame_sec+1
-    print(f"[hog] 現在{frame_sec}\n[hog]残り{frame_sec_all-frame_sec}\n[hog]{frame_sec/frame_sec_all*100}%完了")
+    print(f"[hog] 現在{frame_sec}/{frame_sec_all}")
     se = se+1
     ret1, frame = cap20.read()
     print(ret1)
@@ -163,24 +146,14 @@ while (cap20.isOpened()):
                         back_im.save(completion, quality=95)
 
                         img = cv2.imread(f'Analysis_result_hog/Analysis_result{i}{a}{se}.jpg')
-                        img_array.append(img)
+                        video.write(img)
                 except Exception as e:
                     try:
                         cv2.imwrite(f"Analysis_result_hog/none/Analysis_result{i}{a}{se}{noe}.jpg",frame)
-                        img = cv2.imread(f"Analysis_result_hog/none/Analysis_result{i}{a}{se}{noe}.jpg")
-                        img_array.append(img)
                         noe = noe+1
                     except:
                         print("[hog] error" + str(e))
                     print("[hog] error" + str(e))
-    
-
-name = 'Face recognition hog.mp4'
-fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
-video = cv2.VideoWriter(name,fourcc,10,(1000, 800))
-
-for i in range(len(img_array)):
-    video.write(img_array[i])
 
 video.release()
 

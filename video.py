@@ -2,13 +2,15 @@ import cv2
 import face_recognition
 from PIL import Image, ImageFont, ImageDraw
 from moviepy.editor import *
+from moviepy.video.fx.resize import resize
+
 import threading
 ok = False
 
 PATHS = [
     "vtest.mp4",#ビデオデータ
     "movie_resied.mp4",  # 解像度変更したビデオデータ
-    "image/elon_test.jpg"  # 対象人物指定画像
+    "image/elon_test.png"  # 対象人物指定画像
 
 ]
 global XML_PATH,cascade
@@ -37,23 +39,9 @@ def one():
     save_path = "movie_set/cat_vtest_1.mp4"    # 編集後のファイル保存先のパス
     video = VideoFileClip(file_path).subclip(start, end)    # ビデオのカット開始
     video.write_videofile(save_path,fps=10)
-    cap = cv2.VideoCapture(save_path)
-    # 動画のプロパティを取得
-    fps = 10
-    saizu = (720,480)
-    # 書き出し設定
-    fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
-    writer = cv2.VideoWriter("movie_set/cat_vtest_1_set.mp4",fourcc, fps, saizu)
-    # 画質変換
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
-        frame = cv2.resize(frame,saizu)
-        writer.write(frame)
-
-    writer.release()
-    cap.release()
+    clip = VideoFileClip(save_path)
+    clip_resized = clip.resize((720,480))
+    clip_resized.write_videofile("movie_set/cat_vtest_1_set.mp4")
 
 def two():
     start = DURATION    # 切り出し開始時刻。秒で表現
@@ -61,23 +49,9 @@ def two():
     save_path = "movie_set/cat_vtest_2.mp4"    # 編集後のファイル保存先のパス
     video = VideoFileClip(file_path).subclip(start, end)    # ビデオのカット開始
     video.write_videofile(save_path,fps=10)
-    cap = cv2.VideoCapture(save_path)
-    # 動画のプロパティを取得
-    fps = 10
-    saizu = (720,480)
-    # 書き出し設定
-    fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
-    writer = cv2.VideoWriter("movie_set/cat_vtest_2_set.mp4",fourcc, fps, saizu)
-    # 画質変換
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
-        frame = cv2.resize(frame,saizu)
-        writer.write(frame)
-
-    writer.release()
-    cap.release()
+    clip = VideoFileClip(save_path)
+    clip_resized = clip.resize((720,480))
+    clip_resized.write_videofile("movie_set/cat_vtest_2_set.mp4")
 
 def three():
     start = DURATION*2    # 切り出し開始時刻。秒で表現
@@ -85,52 +59,28 @@ def three():
     save_path = "movie_set/cat_vtest_3.mp4"    # 編集後のファイル保存先のパス
     video = VideoFileClip(file_path).subclip(start, end)    # ビデオのカット開始
     video.write_videofile(save_path,fps=10)
-    cap = cv2.VideoCapture(save_path)
-    # 動画のプロパティを取得
-    fps = 10
-    saizu = (720,480)
-    # 書き出し設定
-    fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
-    writer = cv2.VideoWriter("movie_set/cat_vtest_3_set.mp4",fourcc, fps, saizu)
-    # 画質変換
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
-        frame = cv2.resize(frame,saizu)
-        writer.write(frame)
+    clip = VideoFileClip(save_path)
+    clip_resized = clip.resize((720,480))
+    clip_resized.write_videofile("movie_set/cat_vtest_3_set.mp4")
 
-    writer.release()
-    cap.release()
 def four():
     start = DURATION*3    # 切り出し開始時刻。秒で表現
     end = DURATION*4    # 切り出し終了時刻。同じく秒で表現
     save_path = "movie_set/cat_vtest_4.mp4"    # 編集後のファイル保存先のパス
     video = VideoFileClip(file_path).subclip(start, end)    # ビデオのカット開始
     video.write_videofile(save_path,fps=10)
-    cap = cv2.VideoCapture(save_path)
-    # 動画のプロパティを取得
-    fps = 10
-    saizu = (720,480)
-    # 書き出し設定
-    fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
-    writer = cv2.VideoWriter("movie_set/cat_vtest_4_set.mp4",fourcc, fps, saizu)
-    # 画質変換
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
-        frame = cv2.resize(frame,saizu)
-        writer.write(frame)
-
-    writer.release()
-    cap.release()
+    clip = VideoFileClip(save_path)
+    clip_resized = clip.resize((720,480))
+    clip_resized.write_videofile("movie_set/cat_vtest_4_set.mp4")
 
 t1 = threading.Thread(target=one)
 t2 = threading.Thread(target=two)
 t3 = threading.Thread(target=three)
 t4 = threading.Thread(target=four)
-
+t1.setDaemon(True)
+t2.setDaemon(True)
+t3.setDaemon(True)
+t4.setDaemon(True)
 t1.start()
 t2.start()
 t3.start()
@@ -166,13 +116,14 @@ name_2 = 'Face recognition hog 2.mp4'
 name_3 = 'Face recognition hog 3.mp4'
 name_4 = 'Face recognition hog 4.mp4'
 fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
-video_1 = cv2.VideoWriter(name_1,fourcc,30,(1000, 800))
-video_2 = cv2.VideoWriter(name_2,fourcc,30,(1000, 800))
-video_3 = cv2.VideoWriter(name_3,fourcc,30,(1000, 800))
-video_4 = cv2.VideoWriter(name_4,fourcc,30,(1000, 800))
+video_1 = cv2.VideoWriter(name_1,fourcc,60,(1000, 800))
+video_2 = cv2.VideoWriter(name_2,fourcc,60,(1000, 800))
+video_3 = cv2.VideoWriter(name_3,fourcc,60,(1000, 800))
+video_4 = cv2.VideoWriter(name_4,fourcc,60,(1000, 800))
 
 def one_set():
     se,noe,frame_sec,v = 0,0,0,0
+    cascade = cv2.CascadeClassifier(XML_PATH)
     while (cap1.isOpened()):
         try:
             frame_sec = frame_sec+1
@@ -226,10 +177,8 @@ def one_set():
                                 results = face_recognition.compare_faces([encode_elon], encode_elon_test)
                                 # 値が小さい程マッチしている
                                 face_dis = face_recognition.face_distance([encode_elon], encode_elon_test)
-                                print(f"[hog:1] {results, face_dis}")
                                 p = 1 - face_dis[0]
                                 probability = p*100
-                                print(f"[hog:1] {probability}%")
                                 if results == [False]:
                                     res = "No match."
                                 elif results == [True]:
@@ -293,6 +242,7 @@ def one_set():
 
 def two_set():
     se,noe,frame_sec,v = 0,0,0,0
+    cascade = cv2.CascadeClassifier(XML_PATH)
     while (cap2.isOpened()):
         try:
             frame_sec = frame_sec+1
@@ -346,10 +296,10 @@ def two_set():
                                 results = face_recognition.compare_faces([encode_elon], encode_elon_test)
                                 # 値が小さい程マッチしている
                                 face_dis = face_recognition.face_distance([encode_elon], encode_elon_test)
-                                print(f"[hog:2] {results, face_dis}")
+    
                                 p = 1 - face_dis[0]
                                 probability = p*100
-                                print(f"[hog:2] {probability}%")
+                                
                                 if results == [False]:
                                     res = "No match."
                                 elif results == [True]:
@@ -411,7 +361,7 @@ def two_set():
             v = v+1
     
 def three_set():
-    
+    cascade = cv2.CascadeClassifier(XML_PATH)
     se,noe,frame_sec,v = 0,0,0,0
     while (cap3.isOpened()):
         try:
@@ -466,10 +416,8 @@ def three_set():
                                 results = face_recognition.compare_faces([encode_elon], encode_elon_test)
                                 # 値が小さい程マッチしている
                                 face_dis = face_recognition.face_distance([encode_elon], encode_elon_test)
-                                print(f"[hog:3] {results, face_dis}")
                                 p = 1 - face_dis[0]
                                 probability = p*100
-                                print(f"[hog:3] {probability}%")
                                 if results == [False]:
                                     res = "No match."
                                 elif results == [True]:
@@ -531,9 +479,12 @@ def three_set():
             v = v+1
 
 def foure_set():
+    cascade = cv2.CascadeClassifier(XML_PATH)
     se,noe,frame_sec,v = 0,0,0,0
     while (cap4.isOpened()):
         try:
+            frame_sec = frame_sec+1
+            print(f"[hog:4] 現在{frame_sec}/{frame_sec_all_3}")
             se = se+1
             ret1, frame = cap4.read()
             if ret1 == False:break
@@ -651,6 +602,10 @@ t1 = threading.Thread(target=one_set)
 t2 = threading.Thread(target=two_set)
 t3 = threading.Thread(target=three_set)
 t4 = threading.Thread(target=foure_set)
+t1.setDaemon(True)
+t2.setDaemon(True)
+t3.setDaemon(True)
+t4.setDaemon(True)
 
 t1.start()
 t2.start()
@@ -660,8 +615,6 @@ t1.join()
 t2.join()
 t3.join()
 t4.join()
-
-
 
 
 clip1 = VideoFileClip(name_1)

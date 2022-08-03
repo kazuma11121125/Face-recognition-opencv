@@ -45,6 +45,7 @@ def cnn():
     h = len(rects)
     print(f"[cnn] {h}")
     y = len(rects1)
+    y = y+1
     print(f"[cnn] {y}")
     for i in range(h):
         print(f"[cnn] {i}")
@@ -148,6 +149,7 @@ def hog():
     h = len(rects)
     print(f"[hog] {h}\n")
     y = len(rects1)
+    y = y+1
     print(f"[hog] {y}\n")
     for i in range(h):
         print(f"[hog] {i}\n")
